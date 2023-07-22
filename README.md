@@ -1,29 +1,36 @@
 # Task
 
 ### Objectives:
-To Use infrastructure-as-code tools (Terraform):
+To use infrastructure-as-code tools (Terraform):
 1. Set up EKS cluster, VPC, subnets, and other required resources.
 2. Set up a private Docker registry to store the application's Docker images.
-3. Setup MySQL Database
----
+3. Setup MySQL Database.
 
-### Infrastructure Diagram
+## Infrastructure Architecture Diagram
 
 ![Infrastructure diagram of the setup](./assets/infra.png)
-Infrastructure diagram of the setup
+Figure 1: Infrastructure diagram of the setup
 
-### Design Choice
-For high availability and fault tolerance of the infrastructure, instances have been replicated on different availability zones (us-east-1a, us-east-1b, us-east-1c) within the same region.
+1. Client device used to prepare the infrastructure as code. It should have git, terraform and AWS CLI installed.
+2. GitHub: Source Code Management GitHub used for code versioning. With `git pull`, and `git push`, files are kept in sync with the remote server.
+3. Terraform: The infrastructure-as-code tool used to codify and provision the infrastructure on cloud.
+4. AWS Cloud, where the infrastructure resources are provisioned.
 
-## Here's a step-by-step approach, to reproduce this task
+## Solution Deployment
 
-### Set 0: Getting Started: Assumptions and Prerequisites
+### Step 0: Getting Started
 
 **Prerequisites:**
 To reproduce this set-up:
-- Familiarity with Linux, Git and GitHub, infrastructure-as-code and DevOps.
+- Familiarity with Linux, Git and GitHub, infrastructure-as-code and DevOps has been assumed.
 - Ubuntu Linux 20.04 Focal Fossa LTS distribution was used for all the activities in the task.
 - An AWS account with appropriate permissions to create resources like EKS, VPC, subnets, ECR, and RDS (MySQL) is required. Visit this link to [create an AWS account](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-creating.html) if you don't already have an account.
+
+**Considerations:**
+- For High availability and fault tolerance, instances have been replicated on different availability zones (us-east-1a, us-east-1b, us-east-1c) within the same region.
+- Principle of Least Privilege was considered when assigning policy to IAM role for the cluster.
+- Security: Public access to the MySQL database has been denied.
+
 
 ### Step 1: Confirm Terraform is Installed Locally
 
@@ -38,11 +45,11 @@ sudo snap install terraform --classic
 To confirm the version of Terraform installed, run the command: `terraform --version`. This command will print the version of terraform installed.
 
 ![terraform version](./assets/terraform_version.png)
-terraform version
+Figure 2: showing version of terraform installed
 
 ### Step 2: Install and Configure AWS CLI to Authenticate to AWS.
 
-Download and install the AWS CLI based on your operating system. Refer to this AWS documentation for device/operating system specific instruction: [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+Download and install the AWS CLI based on your operating system. Refer to this AWS documentation for device/operating system specific instruction: [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
 
 Below is a command to install it on Linux, distribution.
 
@@ -59,7 +66,7 @@ aws --version
 ```
 
 ![aws-version.png](./assets/aws-version.png)
-aws version
+Figure 3: showing version of aws-cli installed
 
 Optionally, you can run this command to remove the installation files:
 
@@ -79,8 +86,8 @@ aws configure
 ```
 
 Set the following environment variables with your AWS credentials:
-  - **`AWS_ACCESS_KEY_ID`**: <AWS_Access_Key_ID>.
-  - **`AWS_SECRET_ACCESS_KEY`**: <AWS_Secret_Access_Key>.
+  - **`AWS_ACCESS_KEY_ID`**: <AWS_Access_Key_ID>
+  - **`AWS_SECRET_ACCESS_KEY`**: <AWS_Secret_Access_Key>
   - **`AWS_DEFAULT_REGION`**: <Preferred_AWS_region (e.g., **`us-east-1`**)>
   - **`Default output format`**: json
 
@@ -98,7 +105,7 @@ You should see information about the AWS account that your credentials are assoc
 <summary>Option 1: Pull the repository from GitHub</summary>
 <br>
   
-Clone the terraform configuration repository from GitHub to your local device and change directory `cd` into this repository
+Clone the Terraform repository from GitHub to your client device and change directory `cd` into this repository:
   
 ```bash
 git clone https://github.com/paschalogu/Terraform.git
@@ -112,11 +119,11 @@ cd Terraform
 Make a Repository on your local device to hold Terraform codes, and change directory to this newly created repository.
 
 ```bash
-mkdir Terraform
-cd Terraform
+mkdir Terraform && cd Terraform
 ```
+The `mkdir` command creates the directory, and the `cd` command changes the working directory to the newly created "Terraform" directory.
 
-Create **`main.tf`** for your main Terraform configuration, **`variables.tf`** to define variables (helpful for managing settings), and **`outputs.tf`** to define outputs (display useful information after running **`terraform apply`**).
+Create **`main.tf`** for your main Terraform configuration, **`variables.tf`** to define variables (helpful for managing settings), and **`outputs.tf`** to define outputs (display useful information after running **`terraform apply`)**.
 
 ```bash
 touch main.tf variables.tf outputs.tf
@@ -126,7 +133,7 @@ The command above creates the three files at ones.
 
 **Write your Terraform code in the Appropriate Files.**
 Run the command `nano main.tf` and paste the code from [main.tf](main.tf) inside:
-Repeat same steps for `variables.tf` and `outputs.tf` and paste the code from [variables.tf](variables.tf) and [outputs.tf](outputs.tf) respectively
+Repeat same steps for `variables.tf` and `outputs.tf` and paste the code from [variables.tf](variables.tf) and [outputs.tf](outputs.tf) respectively.
 </details>
 
 ### Step 4: Initialize, Plan, and Apply Terraform Configuration in your Project Directory:
@@ -137,7 +144,7 @@ To initialize the terraform project, run the command:
 terraform init
 ```
 
-Run `terraform plan` to see the list of changes that will be made on creation.
+To review the list of changes that will be applied during creation, run the command `terraform plan`.
 
 ```bash
 terraform plan
@@ -149,7 +156,7 @@ Apply your Terraform configuration to create AWS resources:
 terraform apply
 ```
 
-Terraform will display the changes to be made to your AWS infrastructure. Type **`yes`** and press Enter to confirm and apply the changes. To see the state of the infrastructure, run the command below `terraform state list`
+Terraform will display the changes to be made to your AWS infrastructure. Type **`yes`** and press Enter to confirm and apply the changes. To see the state of the infrastructure, run the command below `terraform state list`.
 
 ```bash
 terraform state list
@@ -165,18 +172,16 @@ terraform destroy
 
 ### Step 5: Pushing the code to Source Code Management (GitHub)
 
-Create a new repository on GitHub and push the existing repository from the command line
+Create a new repository on GitHub and push the existing repository from the command line.
 
-Initialize the repository for git to track changes in the repository.
-
-On your project directory, run the below command to initialize git
+Initialize the repository for git to track changes in the repository.On your project directory, run the below command to initialize git:
 
 ```bash
 git init
 ```
 
 Create a `.gitignore` file by running the command `nano .gitignore`.
-input the files you don't want to commit in this .gitignore file. This includes variable files and terraform state files. Any file added here will not be pushed to GitHub. Add below files to the .gitignore file
+input the files you don't want to commit in this .gitignore file. This includes variable files and terraform state files. Any file added here will not be pushed to GitHub. Add below files to the .gitignore file:
 
 ```bash
 .git/
