@@ -1,16 +1,27 @@
-# Terraform Task
+# Task
+
+### Objectives:
+To Use infrastructure-as-code tools (Terraform):
+1. Set up EKS cluster, VPC, subnets, and other required resources.
+2. Set up a private Docker registry to store the application's Docker images.
+3. Setup MySQL Database
+---
+
+### Infrastructure Diagram
 
 ![Infrastructure diagram of the setup](./assets/infra.png)
-
 Infrastructure diagram of the setup
+
+### Design Choice
+For high availability and fault tolerance of the infrastructure, instances have been replicated on different availability zones (us-east-1a, us-east-1b, us-east-1c) within the same region.
 
 ## Here's a step-by-step approach, to reproduce this task
 
 ### Set 0: Getting Started: Assumptions and Prerequisites
 
-
 **Prerequisites:**
-- Functional knowledge of Linux, Git and GitHub, infrastructure as code has been assumed in this project assumed
+To reproduce this set-up:
+- Familiarity with Linux, Git and GitHub, infrastructure-as-code and DevOps.
 - Ubuntu Linux 20.04 Focal Fossa LTS distribution was used for all the activities in the task.
 - An AWS account with appropriate permissions to create resources like EKS, VPC, subnets, ECR, and RDS (MySQL) is required. Visit this link to [create an AWS account](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-creating.html) if you don't already have an account.
 
@@ -156,7 +167,7 @@ terraform destroy
 
 Create a new repository on GitHub and push the existing repository from the command line
 
-Initialize the repository for git.
+Initialize the repository for git to track changes in the repository.
 
 On your project directory, run the below command to initialize git
 
