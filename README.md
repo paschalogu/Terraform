@@ -1,7 +1,9 @@
 # Task
 
 ### Objectives:
+
 To use infrastructure-as-code tools (Terraform):
+
 1. Set up EKS cluster, VPC, subnets, and other required resources.
 2. Set up a private Docker registry to store the application's Docker images.
 3. Setup MySQL Database.
@@ -22,15 +24,16 @@ Figure 1: Infrastructure diagram of the setup
 
 **Prerequisites:**
 To reproduce this set-up:
+
 - Familiarity with Linux, Git and GitHub, infrastructure-as-code and DevOps has been assumed.
 - Ubuntu Linux 20.04 Focal Fossa LTS distribution was used for all the activities in the task.
 - An AWS account with appropriate permissions to create resources like EKS, VPC, subnets, ECR, and RDS (MySQL) is required. Visit this link to [create an AWS account](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-creating.html) if you don't already have an account.
 
 **Considerations:**
+
 - For High availability and fault tolerance, instances have been replicated on different availability zones (us-east-1a, us-east-1b, us-east-1c) within the same region.
 - Principle of Least Privilege was considered when assigning policy to IAM role for the cluster.
 - Security: Public access to the MySQL database has been denied.
-
 
 ### Step 1: Confirm Terraform is Installed Locally
 
@@ -65,7 +68,7 @@ To confirm the version of terraform installed, run the command: `aws --version`.
 aws --version
 ```
 
-![aws-version.png](./assets/aws-version.png)
+![aws-version.png](./assets/aws_version.png)
 Figure 3: showing version of aws-cli installed
 
 Optionally, you can run this command to remove the installation files:
@@ -86,10 +89,11 @@ aws configure
 ```
 
 Set the following environment variables with your AWS credentials:
-  - **`AWS_ACCESS_KEY_ID`**: <AWS_Access_Key_ID>
-  - **`AWS_SECRET_ACCESS_KEY`**: <AWS_Secret_Access_Key>
-  - **`AWS_DEFAULT_REGION`**: <Preferred_AWS_region (e.g., **`us-east-1`**)>
-  - **`Default output format`**: json
+
+- **`AWS_ACCESS_KEY_ID`**: <AWS_Access_Key_ID>
+- **`AWS_SECRET_ACCESS_KEY`**: <AWS_Secret_Access_Key>
+- **`AWS_DEFAULT_REGION`**: <Preferred_AWS_region (e.g., **`us-east-1`**)>
+- **`Default output format`**: json
 
 Run the following command to verify that your AWS CLI is configured correctly:
 
@@ -121,6 +125,7 @@ Make a Repository on your local device to hold Terraform codes, and change direc
 ```bash
 mkdir Terraform && cd Terraform
 ```
+
 The `mkdir` command creates the directory, and the `cd` command changes the working directory to the newly created "Terraform" directory.
 
 Create **`main.tf`** for your main Terraform configuration, **`variables.tf`** to define variables (helpful for managing settings), and **`outputs.tf`** to define outputs (display useful information after running **`terraform apply`)**.
@@ -134,7 +139,13 @@ The command above creates the three files at ones.
 **Write your Terraform code in the Appropriate Files.**
 Run the command `nano main.tf` and paste the code from [main.tf](main.tf) inside:
 Repeat same steps for `variables.tf` and `outputs.tf` and paste the code from [variables.tf](variables.tf) and [outputs.tf](outputs.tf) respectively.
+
 </details>
+
+<br>
+This is the structure of the directory after files have been Terraform created.
+
+![Terraform directory configuration.png](./assets/configuration.png)
 
 ### Step 4: Initialize, Plan, and Apply Terraform Configuration in your Project Directory:
 
@@ -156,11 +167,13 @@ Apply your Terraform configuration to create AWS resources:
 terraform apply
 ```
 
-Terraform will display the changes to be made to your AWS infrastructure. Type **`yes`** and press Enter to confirm and apply the changes. To see the state of the infrastructure, run the command below `terraform state list`.
+Terraform will display the changes to be made to your AWS infrastructure. Type **`yes`** and press Enter to confirm and apply the changes. To see the state of the infrastructure, run the command below:
 
 ```bash
 terraform state list
 ```
+
+![Terraform State List](./assets/terraformstate.png)
 
 Alternatively, you can use AWS CLI or the AWS Management Console to verify that the resources were created as expected.
 
