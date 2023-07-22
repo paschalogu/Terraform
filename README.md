@@ -1,4 +1,4 @@
-# Task
+# DevOps Task
 
 ### Objectives:
 
@@ -10,8 +10,8 @@ To use infrastructure-as-code tools (Terraform):
 
 ## Infrastructure Architecture Diagram
 
-![Infrastructure diagram of the setup](./assets/infra.png)
 Figure 1: Infrastructure diagram of the setup
+![Infrastructure diagram of the setup](./assets/infra.png)
 
 1. Client device used to prepare the infrastructure as code. It should have git, terraform and AWS CLI installed.
 2. GitHub: Source Code Management GitHub used for code versioning. With `git pull`, and `git push`, files are kept in sync with the remote server.
@@ -47,8 +47,8 @@ sudo snap install terraform --classic
 
 To confirm the version of Terraform installed, run the command: `terraform --version`. This command will print the version of terraform installed.
 
-![terraform version](./assets/terraform_version.png)
 Figure 2: showing version of terraform installed
+![terraform version](./assets/terraform_version.png)
 
 ### Step 2: Install and Configure AWS CLI to Authenticate to AWS.
 
@@ -68,8 +68,8 @@ To confirm the version of terraform installed, run the command: `aws --version`.
 aws --version
 ```
 
-![aws-version.png](./assets/aws_version.png)
 Figure 3: showing version of aws-cli installed
+![aws-version.png](./assets/aws_version.png)
 
 Optionally, you can run this command to remove the installation files:
 
@@ -128,7 +128,7 @@ mkdir Terraform && cd Terraform
 
 The `mkdir` command creates the directory, and the `cd` command changes the working directory to the newly created "Terraform" directory.
 
-Create **`main.tf`** for your main Terraform configuration, **`variables.tf`** to define variables (helpful for managing settings), and **`outputs.tf`** to define outputs (display useful information after running **`terraform apply`)**.
+Create `main.tf` for the main Terraform configuration, `variables.tf` to define variables (helpful for managing settings), and `outputs.tf` to define outputs (display useful information after running `terraform apply`).
 
 ```bash
 touch main.tf variables.tf outputs.tf
@@ -146,6 +146,22 @@ Repeat same steps for `variables.tf` and `outputs.tf` and paste the code from [v
 This is the structure of the directory after files have been Terraform created.
 
 ![Terraform directory configuration.png](./assets/configuration.png)
+
+**Resources to be Created**:
+
+1. Virtual Private Cloud (VPC): The Virtual Private Cloud will be created to isolates virtual networks within the aws cloud infrastructure, providing control over network settings, IP address ranges, and subnets securely.
+
+2. Subnets: Three subnets will be created within 3 availability zones. This multi-AZ architecture is considered and designed to provide redundancy and high availability.
+
+3. IAM Role: Identity and Access Management (IAM) role that has the necessary permissions for managing the cluster will be created. This IAM role will be used by the EKS cluster.
+
+4. IAM Role Policy Attachment: A resource to attachment the AmazonEKSClusterPolicy to the IAM role created for the EKS cluster.
+
+5. Elastic Kubernetes Service (EKS) cluster: AWS EKS cluster will be created and associated with the IAM role created above.
+
+6. ECR: An Elastic Container Registry in which you to store Application Docker images will be created.
+
+7. MySQL database Instance: An RDS MySQL instance with the specified configurations like identifier, engine, instance class, allocated storage, username, password, etc.
 
 ### Step 4: Initialize, Plan, and Apply Terraform Configuration in your Project Directory:
 
@@ -176,12 +192,6 @@ terraform state list
 ![Terraform State List](./assets/terraformstate.png)
 
 Alternatively, you can use AWS CLI or the AWS Management Console to verify that the resources were created as expected.
-
-To delete and clean up everything, run the destroy command below:
-
-```bash
-terraform destroy
-```
 
 ### Step 5: Pushing the code to Source Code Management (GitHub)
 
@@ -214,4 +224,12 @@ git commit -m "Commit Message"
 git branch -M main
 git remote add origin https://github.com/<github_username>/<github_repo>.git
 git push -u origin main
+```
+
+### Step 6: Deletion of Resources
+
+To delete and clean up everything, run the destroy command below and type `yes` when prompted:
+
+```bash
+terraform destroy
 ```
