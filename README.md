@@ -31,9 +31,9 @@ To reproduce this set-up:
 
 **Considerations:**
 
-- For High availability and fault tolerance, instances have been replicated on different availability zones (us-east-1a, us-east-1b, us-east-1c) within the same region.
-- Principle of Least Privilege was considered when assigning policy to IAM role for the cluster.
-- Security: Public access to the MySQL database has been denied.
+- Availability: For High availability and fault tolerance, instances have been replicated on different availability zones (us-east-1a, us-east-1b, us-east-1c) within the same region.
+- Security: Principle of Least Privilege was considered when assigning policy to IAM role for the cluster.
+- Security: Public access to the MySQL database has been disabled.
 
 ### Step 1: Confirm Terraform is Installed Locally
 
@@ -141,10 +141,10 @@ Run the command `nano main.tf` and paste the code from [main.tf](main.tf) inside
 Repeat same steps for `variables.tf` and `outputs.tf` and paste the code from [variables.tf](variables.tf) and [outputs.tf](outputs.tf) respectively.
 
 </details>
-
 <br>
-This is the structure of the directory after files have been Terraform created.
+This is the structure of the directory after files have been created.
 
+Figure 4: Showing the structure of the Terraform Directory
 ![Terraform directory configuration.png](./assets/configuration.png)
 
 **Resources to be Created**:
@@ -159,7 +159,7 @@ This is the structure of the directory after files have been Terraform created.
 
 5. Elastic Kubernetes Service (EKS) cluster: AWS EKS cluster will be created and associated with the IAM role created above.
 
-6. ECR: An Elastic Container Registry in which you to store Application Docker images will be created.
+6. Elastic Container Registry (ECR): An Elastic Container Registry in which you to store Application Docker images will be created.
 
 7. MySQL database Instance: An RDS MySQL instance with the specified configurations like identifier, engine, instance class, allocated storage, username, password, etc.
 
@@ -171,31 +171,32 @@ To initialize the terraform project, run the command:
 terraform init
 ```
 
-To review the list of changes that will be applied during creation, run the command `terraform plan`.
+To review the list of changes that will be applied during creation, run the command below:
 
 ```bash
 terraform plan
 ```
 
-Apply your Terraform configuration to create AWS resources:
+Apply Terraform configuration to create AWS resources:
 
 ```bash
 terraform apply
 ```
 
-Terraform will display the changes to be made to your AWS infrastructure. Type **`yes`** and press Enter to confirm and apply the changes. To see the state of the infrastructure, run the command below:
+Terraform will display the changes to be made to AWS cloud infrastructure. Type **`yes`** and press Enter to confirm and apply the changes. To see the state of the infrastructure, run the command below:
 
 ```bash
 terraform state list
 ```
 
+Figure 5: Showing the terraform state command
 ![Terraform State List](./assets/terraformstate.png)
 
 Alternatively, you can use AWS CLI or the AWS Management Console to verify that the resources were created as expected.
 
-### Step 5: Pushing the code to Source Code Management (GitHub)
+### Step 5: Pushing the code to GitHub
 
-Create a new repository on GitHub and push the existing repository from the command line.
+Create a new repository on GitHub and push the Terraform repository from the command line.
 
 Initialize the repository for git to track changes in the repository.On your project directory, run the below command to initialize git:
 
@@ -204,7 +205,7 @@ git init
 ```
 
 Create a `.gitignore` file by running the command `nano .gitignore`.
-input the files you don't want to commit in this .gitignore file. This includes variable files and terraform state files. Any file added here will not be pushed to GitHub. Add below files to the .gitignore file:
+Input the files you don't want to commit to gitHub in this .gitignore file. This includes variable files and terraform state files. Any file added here will not be pushed to GitHub. Add below files to the .gitignore file:
 
 ```bash
 .git/
@@ -216,7 +217,7 @@ terraform.tfstate.backup
 variables.tf
 ```
 
-Proceed to add, commit , and push the code to Github.
+Proceed to add, commit, and push the code to Github.
 
 ```bash
 git add .
@@ -228,7 +229,7 @@ git push -u origin main
 
 ### Step 6: Deletion of Resources
 
-To delete and clean up everything, run the destroy command below and type `yes` when prompted:
+To destroy, delete and clean up everything, run the destroy command below and type `yes` when prompted:
 
 ```bash
 terraform destroy
